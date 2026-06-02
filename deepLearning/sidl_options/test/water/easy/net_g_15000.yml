@@ -1,0 +1,55 @@
+
+path:
+  root: C:/DNN/deepLearning/NAFNet
+
+  pretrain_network_g: C:\DNN\deepLearning\NAFNet\experiments\NAFNet-water-easy-w16\models\net_g_15000.pth
+
+  strict_load_g: true
+
+name: TEST-water-easy-net_g_15000
+
+model_type: ImageRestorationModel
+
+scale: 1
+num_gpu: 1
+
+datasets:
+
+  test:
+    name: sidl-water-easy-test
+
+    type: PairedImageDataset
+
+    dataroot_gt: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/target
+
+    dataroot_lq: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/input
+
+    io_backend:
+      type: disk
+
+network_g:
+  type: NAFNetLocal
+
+  width: 16
+
+  enc_blk_nums: [1, 1, 1, 8]
+
+  middle_blk_num: 1
+
+  dec_blk_nums: [1, 1, 1, 1]
+
+val:
+
+  save_img: true
+
+  metrics:
+
+    psnr:
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+
+    ssim:
+      type: calculate_ssim
+      crop_border: 0
+      test_y_channel: false
