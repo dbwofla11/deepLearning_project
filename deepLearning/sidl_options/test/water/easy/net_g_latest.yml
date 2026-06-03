@@ -20,9 +20,9 @@ datasets:
 
     type: PairedImageDataset
 
-    dataroot_gt: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/target
+    dataroot_gt: G:\.shortcut-targets-by-id\1oZXf6Nq0R5ucEyqzpSvQVwI1wMO5xmAj\water\easy\input
 
-    dataroot_lq: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/input
+    dataroot_lq: G:\.shortcut-targets-by-id\1oZXf6Nq0R5ucEyqzpSvQVwI1wMO5xmAj\water\easy\input
 
     io_backend:
       type: disk

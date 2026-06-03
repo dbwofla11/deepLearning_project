@@ -1,0 +1,16 @@
+difficulty,experiment,epoch,model,flops,gmacs,params,latency_ms
+easy,NAFNet-water-easy-w16,5000,net_g_5000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,19.0766
+easy,NAFNet-water-easy-w16,10000,net_g_10000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,18.1532
+easy,NAFNet-water-easy-w16,15000,net_g_15000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.881
+easy,NAFNet-water-easy-w16,20000,net_g_20000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,18.0069
+easy,NAFNet-water-easy-w16,latest,net_g_latest.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.2341
+hard,NAFNet-water-hard-w16,5000,net_g_5000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,16.8378
+hard,NAFNet-water-hard-w16,10000,net_g_10000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.0661
+hard,NAFNet-water-hard-w16,15000,net_g_15000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,19.4917
+hard,NAFNet-water-hard-w16,20000,net_g_20000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,19.5021
+hard,NAFNet-water-hard-w16,latest,net_g_latest.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,18.3588
+unknown,NAFNet-water-medium-w16,5000,net_g_5000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,18.1061
+unknown,NAFNet-water-medium-w16,10000,net_g_10000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.9247
+unknown,NAFNet-water-medium-w16,15000,net_g_15000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.5172
+unknown,NAFNet-water-medium-w16,20000,net_g_20000.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,16.8554
+unknown,NAFNet-water-medium-w16,latest,net_g_latest.pth,18.5265 GFLOPS,9.1703 GMACs,1.9696 M,17.0455
