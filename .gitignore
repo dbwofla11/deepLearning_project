@@ -218,3 +218,7 @@ __marimo__/
 .streamlit/secrets.toml
 /deepLearning/NAFNet/results
 /deepLearning/NAFNet/experiments
+
+/deepLearning/NAFNet/logs
+/deepLearning/실험모델히스토리
+/deepLearning/테스트전NAFNet_experiments

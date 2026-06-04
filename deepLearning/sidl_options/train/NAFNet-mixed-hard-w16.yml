@@ -5,7 +5,7 @@ path:
   strict_load_g: true
   resume_state: ~
 
-name: NAFNet-water-easy-w16
+name: NAFNet-mixed-hard-w16
 
 model_type: ImageRestorationModel
 
@@ -16,11 +16,11 @@ manual_seed: 42
 datasets:
 
   train:
-    name: sidl-water-train
+    name: sidl-mixed-train
     type: PairedImageDataset
 
-    dataroot_gt: G:/.shortcut-targets-by-id/1EEFsAOy22ywrq7X8hbG_yng8rxLpRcoh/water/target
-    dataroot_lq: G:/.shortcut-targets-by-id/1EEFsAOy22ywrq7X8hbG_yng8rxLpRcoh/water/input
+    dataroot_gt: G:/.shortcut-targets-by-id/1rmr4AHuOKBYVcTFWdTOrfmNqHNMQRXzT/mixed/target
+    dataroot_lq: G:/.shortcut-targets-by-id/1rmr4AHuOKBYVcTFWdTOrfmNqHNMQRXzT/mixed/input
 
     io_backend:
       type: disk
@@ -31,15 +31,15 @@ datasets:
     use_rot: true
     use_shuffle: true
 
-    num_worker_per_gpu: 1
-    batch_size_per_gpu: 4
+    num_worker_per_gpu: 4
+    batch_size_per_gpu: 64
 
   val:
-    name: sidl-water-easy-val
+    name: sidl-mixed-hard-val
     type: PairedImageDataset
 
-    dataroot_gt: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/target
-    dataroot_lq: G:/.shortcut-targets-by-id/1BsFgeHgPmT1UOKl78ikwUNLB7YjXVRpF/water/easy/input
+    dataroot_gt: G:/.shortcut-targets-by-id/15heQpPoDquJ_skh0A0Sw0H7XTqAVciCY/mixed/hard/target
+    dataroot_lq: G:/.shortcut-targets-by-id/15heQpPoDquJ_skh0A0Sw0H7XTqAVciCY/mixed/hard/input
 
     io_backend:
       type: disk
@@ -58,9 +58,9 @@ train:
   optim_g:
     type: AdamW
 
-    lr: !!float 1e-3
+    lr: !!float 1e-4
 
-    weight_decay: !!float 1e-3
+    weight_decay: !!float 1e-4
 
     betas: [0.9, 0.9]
 
@@ -84,7 +84,7 @@ train:
 
 val:
 
-  val_freq: !!float 5000
+  val_freq: !!float 1000
 
   save_img: true
 
@@ -102,9 +102,9 @@ val:
 
 logger:
 
-  print_freq: !!float 500
+  print_freq: !!float 1000
 
-  save_checkpoint_freq: !!float 5000
+  save_checkpoint_freq: !!float 1000
 
   use_tb_logger: true
 
