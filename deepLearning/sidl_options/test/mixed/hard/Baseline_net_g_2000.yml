@@ -2,11 +2,11 @@
 path:
   root: C:/DNN/deepLearning/NAFNet
 
-  pretrain_network_g: C:\DNN\deepLearning\NAFNet\experiments\NAFNet-water-medium-w16\models\net_g_20000.pth
+  pretrain_network_g: C:\DNN\deepLearning\NAFNet\experiments\NAFNet-mixed-hard-w16\models\net_g_2000.pth
 
   strict_load_g: true
 
-name: TEST-water-medium-net_g_20000
+name: TEST-mixed-hard-net_g_2000
 
 model_type: ImageRestorationModel
 
@@ -16,13 +16,14 @@ num_gpu: 1
 datasets:
 
   test:
-    name: sidl-water-medium-test
+    name: sidl-mixed-hard-test
 
     type: PairedImageDataset
 
-    dataroot_gt: G:\.shortcut-targets-by-id\1oZXf6Nq0R5ucEyqzpSvQVwI1wMO5xmAj\water\medium\input
+    dataroot_gt: G:/.shortcut-targets-by-id/16M_VTZyM-1-mp0UmdTs2kbK0_ro4GkE9/mixed/hard/input
 
-    dataroot_lq: G:\.shortcut-targets-by-id\1oZXf6Nq0R5ucEyqzpSvQVwI1wMO5xmAj\water\medium\input
+    dataroot_lq: G:/.shortcut-targets-by-id/16M_VTZyM-1-mp0UmdTs2kbK0_ro4GkE9/mixed/hard/input
+
     io_backend:
       type: disk
 

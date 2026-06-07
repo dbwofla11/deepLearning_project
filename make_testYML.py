@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from dataset_config import (
-    get_valid_root
+    get_test_root
 )
 
 # =========================================================
@@ -15,16 +15,16 @@ def build_test_yml(
     width=16
 ):
 
-    valid_root = get_valid_root(task)
+    test_root = get_test_root(task)
 
-    valid_gt = (
-        valid_root /
+    test_gt = (
+        test_root /
         difficulty /
         'target'
     ).as_posix()
 
-    valid_lq = (
-        valid_root /
+    test_lq = (
+        test_root /
         difficulty /
         'input'
     ).as_posix()
@@ -53,9 +53,9 @@ datasets:
 
     type: PairedImageDataset
 
-    dataroot_gt: {valid_gt}
+    dataroot_gt: {test_gt}
 
-    dataroot_lq: {valid_lq}
+    dataroot_lq: {test_lq}
 
     io_backend:
       type: disk

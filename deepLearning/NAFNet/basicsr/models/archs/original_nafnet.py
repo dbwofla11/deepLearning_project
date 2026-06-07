@@ -149,8 +149,8 @@ class NAFNet(nn.Module):
             x = x + enc_skip
             x = decoder(x)
 
-        # 여기 부분만 수정 - 오염부분만 추출해서 원본에서 빼주는 방식으로 변경 ( 실험해볼거임 )
         x = self.ending(x)
+        x = x + inp
 
         return x[:, :, :H, :W]
 

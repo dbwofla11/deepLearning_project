@@ -196,8 +196,6 @@ class ImageRestorationModel(BaseModel):
         if not isinstance(preds, list):
             preds = [preds]
 
-        # 실험을 위한 부분 - 오염부분만 추출해서 원본에서 빼주는 방식으로 변경 ( 실험해볼거임 )
-        target_residual = self.lq - self.gt
         self.output = preds[-1]
 
         l_total = 0
@@ -205,11 +203,8 @@ class ImageRestorationModel(BaseModel):
         # pixel loss
         if self.cri_pix:
             l_pix = 0.
-            for pred in preds: # 여기 부분만 수정 - 오염부분만 추출해서 원본에서 빼주는 방식으로 변경 ( 실험해볼거임 )
-                l_pix += self.cri_pix(
-                    pred,
-                    target_residual
-                )
+            for pred in preds:
+                l_pix += self.cri_pix(pred, self.gt)
 
             # print('l pix ... ', l_pix)
             l_total += l_pix
@@ -252,11 +247,7 @@ class ImageRestorationModel(BaseModel):
                 pred = self.net_g(self.lq[i:j])
                 if isinstance(pred, list):
                     pred = pred[-1]
-
-                # 실험을 위한 부분 - 오염부분만 추출해서 원본에서 빼주는 방식으로 변경 ( 실험해볼거임 )
-                restored = self.lq[i:j] - pred
-
-                outs.append(restored.detach().cpu())
+                outs.append(pred.detach().cpu())
                 i = j
 
             self.output = torch.cat(outs, dim=0)

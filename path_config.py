@@ -10,7 +10,7 @@ WIDTH = 16
 # TASK
 # =========================================================
 
-TASK = 'water'
+TASK = 'mixed'
 
 DIFFICULTIES = [
     'easy',
