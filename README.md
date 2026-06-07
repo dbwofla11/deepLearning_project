@@ -1,4 +1,4 @@
-# Residual Prediction based NAFNet for Image Restoration
+# Residual Targeting based NAFNet for Image Restoration
 
 ## Motivation
 
