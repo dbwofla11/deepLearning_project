@@ -6,6 +6,7 @@
 # ------------------------------------------------------------------------
 import importlib
 import torch
+import numpy as np
 import torch.nn.functional as F
 from collections import OrderedDict
 from copy import deepcopy
@@ -240,26 +241,35 @@ class ImageRestorationModel(BaseModel):
 
     def test(self):
         self.net_g.eval()
+
         with torch.no_grad():
             n = len(self.lq)
+
             outs = []
+            pred_residuals = []
+
             m = self.opt['val'].get('max_minibatch', n)
+
             i = 0
+
             while i < n:
-                j = i + m
-                if j >= n:
-                    j = n
+                j = min(i + m, n)
+
                 pred = self.net_g(self.lq[i:j])
+
                 if isinstance(pred, list):
                     pred = pred[-1]
 
-                # 실험을 위한 부분 - 오염부분만 추출해서 원본에서 빼주는 방식으로 변경 ( 실험해볼거임 )
                 restored = self.lq[i:j] - pred
 
                 outs.append(restored.detach().cpu())
+                pred_residuals.append(pred.detach().cpu())
+
                 i = j
 
             self.output = torch.cat(outs, dim=0)
+            self.pred_residual = torch.cat(pred_residuals, dim=0)
+
         self.net_g.train()
 
     def dist_validation(self, dataloader, current_iter, tb_logger, save_img, rgb2bgr, use_image):
@@ -298,6 +308,17 @@ class ImageRestorationModel(BaseModel):
                 gt_img = tensor2img([visuals['gt']], rgb2bgr=rgb2bgr)
                 del self.gt
 
+            lq_img = tensor2img([visuals['lq']], rgb2bgr=rgb2bgr)
+
+            residual_img = np.abs(
+                lq_img.astype(np.float32)
+                - gt_img.astype(np.float32)
+            )
+
+            residual_img = (
+                residual_img / residual_img.max() * 255
+            ).astype(np.uint8)
+
             # tentative for out of GPU memory
             del self.lq
             del self.output
@@ -308,31 +329,97 @@ class ImageRestorationModel(BaseModel):
                     L_img = sr_img[:, :, :3]
                     R_img = sr_img[:, :, 3:]
 
-                    # visual_dir = osp.join('visual_results', dataset_name, self.opt['name'])
-                    visual_dir = osp.join(self.opt['path']['visualization'], dataset_name)
+                    visual_dir = osp.join(
+                        self.opt['path']['visualization'],
+                        dataset_name
+                    )
 
                     imwrite(L_img, osp.join(visual_dir, f'{img_name}_L.png'))
                     imwrite(R_img, osp.join(visual_dir, f'{img_name}_R.png'))
+
                 else:
+
+                    # ---------------------------
+                    # 추가 이미지 생성
+                    # ---------------------------
+                    lq_img = tensor2img(
+                        [visuals['lq']],
+                        rgb2bgr=rgb2bgr
+                    )
+
+                    residual_img = np.abs(
+                        lq_img.astype(np.float32)
+                        - gt_img.astype(np.float32)
+                    )
+
+                    if residual_img.max() > 0:
+                        residual_img = (
+                            residual_img /
+                            residual_img.max()
+                            * 255
+                        )
+
+                    residual_img = residual_img.astype(np.uint8)
+
                     if self.opt['is_train']:
 
-                        save_img_path = osp.join(self.opt['path']['visualization'],
-                                                 img_name,
-                                                 f'{img_name}_{current_iter}.png')
-
-                        save_gt_img_path = osp.join(self.opt['path']['visualization'],
-                                                 img_name,
-                                                 f'{img_name}_{current_iter}_gt.png')
-                    else:
                         save_img_path = osp.join(
-                            self.opt['path']['visualization'], dataset_name,
-                            f'{img_name}.png')
-                        save_gt_img_path = osp.join(
-                            self.opt['path']['visualization'], dataset_name,
-                            f'{img_name}_gt.png')
+                            self.opt['path']['visualization'],
+                            img_name,
+                            f'{img_name}_{current_iter}.png'
+                        )
 
+                        save_gt_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            img_name,
+                            f'{img_name}_{current_iter}_gt.png'
+                        )
+
+                        save_lq_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            img_name,
+                            f'{img_name}_{current_iter}_lq.png'
+                        )
+
+                        save_residual_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            img_name,
+                            f'{img_name}_{current_iter}_residual.png'
+                        )
+
+                    else:
+
+                        save_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            dataset_name,
+                            f'{img_name}.png'
+                        )
+
+                        save_gt_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            dataset_name,
+                            f'{img_name}_gt.png'
+                        )
+
+                        save_lq_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            dataset_name,
+                            f'{img_name}_lq.png'
+                        )
+
+                        save_residual_img_path = osp.join(
+                            self.opt['path']['visualization'],
+                            dataset_name,
+                            f'{img_name}_residual.png'
+                        )
+
+                    # ---------------------------
+                    # 저장
+                    # ---------------------------
                     imwrite(sr_img, save_img_path)
                     imwrite(gt_img, save_gt_img_path)
+                    imwrite(lq_img, save_lq_img_path)
+                    imwrite(residual_img, save_residual_img_path)
 
             if with_metrics:
                 # calculate metrics
@@ -412,10 +499,16 @@ class ImageRestorationModel(BaseModel):
 
     def get_current_visuals(self):
         out_dict = OrderedDict()
+
         out_dict['lq'] = self.lq.detach().cpu()
         out_dict['result'] = self.output.detach().cpu()
+
+        if hasattr(self, 'pred_residual'):
+            out_dict['pred_residual'] = self.pred_residual.detach().cpu()
+
         if hasattr(self, 'gt'):
             out_dict['gt'] = self.gt.detach().cpu()
+
         return out_dict
 
     def save(self, epoch, current_iter):
